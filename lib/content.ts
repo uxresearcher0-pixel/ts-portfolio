@@ -3,6 +3,12 @@ import { sanitizeRichText } from "@/lib/rich-text";
 export type Experience = {
   id: string;
   period: string;
+  startDate: string;
+  endDate: string;
+  current: boolean;
+  employmentType: string;
+  workplaceType: string;
+  location: string;
   company: string;
   role: string;
   summary: string;
@@ -21,6 +27,8 @@ export type Project = {
 export type Education = {
   id: string;
   year: string;
+  startDate: string;
+  endDate: string;
   qualification: string;
   institution: string;
   detail: string;
@@ -125,9 +133,9 @@ export function normalizeContent(value: Partial<PortfolioContent>): PortfolioCon
     ...normalized,
     introduction: sanitizeRichText(normalized.introduction),
     about: normalized.about.map(sanitizeRichText),
-    experiences: normalized.experiences.map(item => ({ ...item, summary: sanitizeRichText(item.summary) })),
+    experiences: normalized.experiences.map(item => ({ ...item, startDate: item.startDate ?? "", endDate: item.endDate ?? "", current: item.current ?? false, employmentType: item.employmentType ?? "Full-time", workplaceType: item.workplaceType ?? "On-site", location: item.location ?? "", summary: sanitizeRichText(item.summary) })),
     skills: normalized.skills.map(item => ({ ...item, description: sanitizeRichText(item.description) })),
-    education: normalized.education.map(item => ({ ...item, detail: sanitizeRichText(item.detail) })),
+    education: normalized.education.map(item => ({ ...item, startDate: item.startDate ?? "", endDate: item.endDate ?? "", detail: sanitizeRichText(item.detail) })),
     projects: normalized.projects.map(item => ({ ...item, summary: sanitizeRichText(item.summary) }))
   };
 }
