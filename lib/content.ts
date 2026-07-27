@@ -17,6 +17,7 @@ export type Experience = {
 
 export type SkillGroup = { id: string; title: string; description: string };
 export type MediaAsset = { id: string; name: string; dataUrl: string; alt: string; size: number; createdAt: string };
+export type ContactLink = { id: string; label: string; url: string; kind: string; showInHero: boolean; showInContact: boolean };
 export type Project = {
   id: string;
   title: string;
@@ -57,6 +58,7 @@ export type PortfolioContent = {
   profileImage: string;
   profileImageAlt: string;
   media: MediaAsset[];
+  links: ContactLink[];
   showAvailability: boolean;
   accentColor: string;
   seoTitle: string;
@@ -94,6 +96,7 @@ export const defaultContent: PortfolioContent = {
   profileImage: "",
   profileImageAlt: "Portrait of Taslima Akter Rumky",
   media: [],
+  links: [{ id: "contact-linkedin", label: "LinkedIn", url: "https://www.linkedin.com/in/taslima-rumky/", kind: "LinkedIn", showInHero: true, showInContact: true }],
   showAvailability: true,
   accentColor: "#6d4aff",
   seoTitle: "Taslima Akter Rumky — UX/UI Designer",
@@ -131,7 +134,8 @@ export function normalizeContent(value: Partial<PortfolioContent>): PortfolioCon
     skills: Array.isArray(safeValue.skills) ? safeValue.skills : defaultContent.skills,
     education: Array.isArray(safeValue.education) ? safeValue.education : defaultContent.education,
     projects: Array.isArray(safeValue.projects) ? safeValue.projects : defaultContent.projects,
-    media: Array.isArray(safeValue.media) ? safeValue.media : safeValue.profileImage ? [{ id: "legacy-profile", name: "Profile portrait", dataUrl: safeValue.profileImage, alt: safeValue.profileImageAlt || "Portrait of Taslima Akter Rumky", size: 0, createdAt: "" }] : defaultContent.media
+    media: Array.isArray(safeValue.media) ? safeValue.media : safeValue.profileImage ? [{ id: "legacy-profile", name: "Profile portrait", dataUrl: safeValue.profileImage, alt: safeValue.profileImageAlt || "Portrait of Taslima Akter Rumky", size: 0, createdAt: "" }] : defaultContent.media,
+    links: Array.isArray(safeValue.links) ? safeValue.links : legacyLinks(safeValue)
   };
   return {
     ...normalized,
@@ -141,6 +145,27 @@ export function normalizeContent(value: Partial<PortfolioContent>): PortfolioCon
     skills: normalized.skills.map(item => ({ ...item, description: sanitizeRichText(item.description) })),
     education: normalized.education.map(item => ({ ...item, startDate: item.startDate ?? "", endDate: item.endDate ?? "", detail: sanitizeRichText(item.detail) })),
     projects: normalized.projects.map(item => ({ ...item, summary: sanitizeRichText(item.summary) })),
-    media: normalized.media.filter(item => /^data:image\/(jpeg|png|webp);base64,/i.test(item.dataUrl)).map(item => ({ ...item, name: sanitizeRichText(item.name).replace(/<[^>]*>/g, ""), alt: sanitizeRichText(item.alt).replace(/<[^>]*>/g, "") }))
+    media: normalized.media.filter(item => /^data:image\/(jpeg|png|webp);base64,/i.test(item.dataUrl)).map(item => ({ ...item, name: sanitizeRichText(item.name).replace(/<[^>]*>/g, ""), alt: sanitizeRichText(item.alt).replace(/<[^>]*>/g, "") })),
+    links: normalized.links.filter(item => item && typeof item.url === "string").map(item => ({ ...item, id: String(item.id), label: sanitizeRichText(item.label).replace(/<[^>]*>/g, ""), url: sanitizeContactUrl(String(item.kind), item.url), kind: String(item.kind), showInHero: Boolean(item.showInHero), showInContact: Boolean(item.showInContact) }))
   };
+}
+
+function legacyLinks(value: Partial<PortfolioContent>): ContactLink[] {
+  return [
+    value.email && { id: "contact-email", label: "Email", url: value.email, kind: "Email", showInHero: false, showInContact: true },
+    value.linkedinUrl && { id: "contact-linkedin", label: "LinkedIn", url: value.linkedinUrl, kind: "LinkedIn", showInHero: true, showInContact: true },
+    value.dribbbleUrl && { id: "contact-dribbble", label: "Dribbble", url: value.dribbbleUrl, kind: "Dribbble", showInHero: true, showInContact: true },
+    value.behanceUrl && { id: "contact-behance", label: "Behance", url: value.behanceUrl, kind: "Behance", showInHero: true, showInContact: true },
+    value.portfolioUrl && { id: "contact-portfolio", label: "Figma portfolio", url: value.portfolioUrl, kind: "Portfolio", showInHero: false, showInContact: true },
+    value.resumeUrl && { id: "contact-resume", label: "Download résumé", url: value.resumeUrl, kind: "Résumé", showInHero: false, showInContact: true }
+  ].filter(Boolean) as ContactLink[];
+}
+
+function sanitizeContactUrl(kind: string, value: string) {
+  const trimmed = String(value).trim().replace(/^mailto:/i, "");
+  if (kind === "Email") return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed) ? trimmed : "";
+  try {
+    const parsed = new URL(trimmed);
+    return parsed.protocol === "http:" || parsed.protocol === "https:" ? parsed.toString() : "";
+  } catch { return ""; }
 }
