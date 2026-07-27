@@ -25,6 +25,7 @@ export type Project = {
   summary: string;
   url: string;
   featured: boolean;
+  imageId?: string;
 };
 export type Education = {
   id: string;
@@ -144,7 +145,7 @@ export function normalizeContent(value: Partial<PortfolioContent>): PortfolioCon
     experiences: normalized.experiences.map(item => ({ ...item, startDate: item.startDate ?? "", endDate: item.endDate ?? "", current: item.current ?? false, employmentType: item.employmentType ?? "Full-time", workplaceType: item.workplaceType ?? "On-site", location: item.location ?? "", summary: sanitizeRichText(item.summary) })),
     skills: normalized.skills.map(item => ({ ...item, description: sanitizeRichText(item.description) })),
     education: normalized.education.map(item => ({ ...item, startDate: item.startDate ?? "", endDate: item.endDate ?? "", detail: sanitizeRichText(item.detail) })),
-    projects: normalized.projects.map(item => ({ ...item, summary: sanitizeRichText(item.summary) })),
+    projects: normalized.projects.map(item => ({ ...item, imageId: item.imageId || "", summary: sanitizeRichText(item.summary) })),
     media: normalized.media.filter(item => /^data:image\/(jpeg|png|webp);base64,/i.test(item.dataUrl)).map(item => ({ ...item, name: sanitizeRichText(item.name).replace(/<[^>]*>/g, ""), alt: sanitizeRichText(item.alt).replace(/<[^>]*>/g, "") })),
     links: normalized.links.filter(item => item && typeof item.url === "string").map(item => ({ ...item, id: String(item.id), label: sanitizeRichText(item.label).replace(/<[^>]*>/g, ""), url: sanitizeContactUrl(String(item.kind), item.url), kind: String(item.kind), showInHero: Boolean(item.showInHero), showInContact: Boolean(item.showInContact) }))
   };
