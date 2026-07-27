@@ -68,6 +68,7 @@ export type PortfolioContent = {
   skills: SkillGroup[];
   education: Education[];
   projects: Project[];
+  projectDisplayLimit: number;
   updatedAt?: string;
 };
 
@@ -120,7 +121,8 @@ export const defaultContent: PortfolioContent = {
     { id: "password-manager", title: "Password Manager", category: "Personal · Security", summary: "A personal case study focused on password-management experiences.", url: "", featured: true },
     { id: "organization-landing", title: "Organization Landing Page", category: "Web design", summary: "A concise organization landing-page experience.", url: "", featured: true },
     { id: "flowbite-design-system", title: "React & Flowbite Design System", category: "Design system", summary: "A personalized component and interface system based on React and Flowbite.", url: "", featured: true }
-  ]
+  ],
+  projectDisplayLimit: 4
 };
 
 export function normalizeContent(value: Partial<PortfolioContent>): PortfolioContent {
@@ -140,12 +142,13 @@ export function normalizeContent(value: Partial<PortfolioContent>): PortfolioCon
   };
   return {
     ...normalized,
+    projectDisplayLimit: normalized.projectDisplayLimit === 3 ? 3 : 4,
     introduction: sanitizeRichText(normalized.introduction),
     about: normalized.about.map(sanitizeRichText),
     experiences: normalized.experiences.map(item => ({ ...item, startDate: item.startDate ?? "", endDate: item.endDate ?? "", current: item.current ?? false, employmentType: item.employmentType ?? "Full-time", workplaceType: item.workplaceType ?? "On-site", location: item.location ?? "", summary: sanitizeRichText(item.summary) })),
     skills: normalized.skills.map(item => ({ ...item, description: sanitizeRichText(item.description) })),
     education: normalized.education.map(item => ({ ...item, startDate: item.startDate ?? "", endDate: item.endDate ?? "", detail: sanitizeRichText(item.detail) })),
-    projects: normalized.projects.map(item => ({ ...item, imageId: item.imageId || "", summary: sanitizeRichText(item.summary) })),
+    projects: normalized.projects.map(item => ({ ...item, imageId: item.imageId || "", url: sanitizeContactUrl("Website", item.url), summary: sanitizeRichText(item.summary) })),
     media: normalized.media.filter(item => /^data:image\/(jpeg|png|webp);base64,/i.test(item.dataUrl)).map(item => ({ ...item, name: sanitizeRichText(item.name).replace(/<[^>]*>/g, ""), alt: sanitizeRichText(item.alt).replace(/<[^>]*>/g, "") })),
     links: normalized.links.filter(item => item && typeof item.url === "string").map(item => ({ ...item, id: String(item.id), label: sanitizeRichText(item.label).replace(/<[^>]*>/g, ""), url: sanitizeContactUrl(String(item.kind), item.url), kind: String(item.kind), showInHero: Boolean(item.showInHero), showInContact: Boolean(item.showInContact) }))
   };
