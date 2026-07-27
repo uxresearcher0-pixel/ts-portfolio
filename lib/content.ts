@@ -1,3 +1,5 @@
+import { sanitizeRichText } from "@/lib/rich-text";
+
 export type Experience = {
   id: string;
   period: string;
@@ -110,7 +112,7 @@ export function normalizeContent(value: Partial<PortfolioContent>): PortfolioCon
   const safeValue = { ...value } as Partial<PortfolioContent> & Record<string, unknown>;
   delete safeValue._id;
   delete safeValue._key;
-  return {
+  const normalized = {
     ...defaultContent,
     ...safeValue,
     about: Array.isArray(safeValue.about) ? safeValue.about.filter(Boolean) : defaultContent.about,
@@ -118,5 +120,14 @@ export function normalizeContent(value: Partial<PortfolioContent>): PortfolioCon
     skills: Array.isArray(safeValue.skills) ? safeValue.skills : defaultContent.skills,
     education: Array.isArray(safeValue.education) ? safeValue.education : defaultContent.education,
     projects: Array.isArray(safeValue.projects) ? safeValue.projects : defaultContent.projects
+  };
+  return {
+    ...normalized,
+    introduction: sanitizeRichText(normalized.introduction),
+    about: normalized.about.map(sanitizeRichText),
+    experiences: normalized.experiences.map(item => ({ ...item, summary: sanitizeRichText(item.summary) })),
+    skills: normalized.skills.map(item => ({ ...item, description: sanitizeRichText(item.description) })),
+    education: normalized.education.map(item => ({ ...item, detail: sanitizeRichText(item.detail) })),
+    projects: normalized.projects.map(item => ({ ...item, summary: sanitizeRichText(item.summary) }))
   };
 }
