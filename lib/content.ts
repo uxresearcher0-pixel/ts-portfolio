@@ -107,13 +107,16 @@ export const defaultContent: PortfolioContent = {
 };
 
 export function normalizeContent(value: Partial<PortfolioContent>): PortfolioContent {
+  const safeValue = { ...value } as Partial<PortfolioContent> & Record<string, unknown>;
+  delete safeValue._id;
+  delete safeValue._key;
   return {
     ...defaultContent,
-    ...value,
-    about: Array.isArray(value.about) ? value.about.filter(Boolean) : defaultContent.about,
-    experiences: Array.isArray(value.experiences) ? value.experiences : defaultContent.experiences,
-    skills: Array.isArray(value.skills) ? value.skills : defaultContent.skills,
-    education: Array.isArray(value.education) ? value.education : defaultContent.education,
-    projects: Array.isArray(value.projects) ? value.projects : defaultContent.projects
+    ...safeValue,
+    about: Array.isArray(safeValue.about) ? safeValue.about.filter(Boolean) : defaultContent.about,
+    experiences: Array.isArray(safeValue.experiences) ? safeValue.experiences : defaultContent.experiences,
+    skills: Array.isArray(safeValue.skills) ? safeValue.skills : defaultContent.skills,
+    education: Array.isArray(safeValue.education) ? safeValue.education : defaultContent.education,
+    projects: Array.isArray(safeValue.projects) ? safeValue.projects : defaultContent.projects
   };
 }
