@@ -8,6 +8,14 @@ export type Experience = {
 };
 
 export type SkillGroup = { id: string; title: string; description: string };
+export type Project = {
+  id: string;
+  title: string;
+  category: string;
+  summary: string;
+  url: string;
+  featured: boolean;
+};
 export type Education = {
   id: string;
   year: string;
@@ -44,6 +52,7 @@ export type PortfolioContent = {
   experiences: Experience[];
   skills: SkillGroup[];
   education: Education[];
+  projects: Project[];
   updatedAt?: string;
 };
 
@@ -53,18 +62,18 @@ export const defaultContent: PortfolioContent = {
   title: "UX/UI Designer",
   availability: "Available for opportunities",
   location: "Dhaka, Bangladesh",
-  heroTitle: "Designing thoughtful experiences",
-  heroAccent: "people can use with confidence.",
+  heroTitle: "Designing clear digital products",
+  heroAccent: "for people and organizations.",
   introduction:
-    "I turn complex ideas into clear, accessible, and visually considered digital products.",
-  aboutTitle: "Clear thinking, purposeful design.",
+    "My portfolio explores public services, enterprise platforms, healthcare, recruitment, consumer applications, and design systems.",
+  aboutTitle: "Product thinking across complex domains.",
   about: [
-    "I’m a UX/UI designer interested in creating useful digital experiences that balance user needs, business goals, and technical reality.",
-    "My work spans research, user flows, wireframes, interface design, prototyping, and design handoff. I value clarity, inclusion, and steady collaboration throughout the product process."
+    "I’m Taslima Akter Rumky, a UX/UI designer presenting case studies across citizen services, enterprise operations, healthcare, recruitment, telecom, security, web experiences, and design systems.",
+    "This portfolio brings those projects together in one place, with detailed Figma work linked as each case study becomes available."
   ],
   focus: "UX/UI & Product Design",
   approach: "Human-centred & accessible",
-  email: "email@example.com",
+  email: "",
   portfolioUrl: "",
   resumeUrl: "",
   linkedinUrl: "https://www.linkedin.com/in/taslima-rumky/",
@@ -76,24 +85,24 @@ export const defaultContent: PortfolioContent = {
   accentColor: "#6d4aff",
   seoTitle: "Taslima Akter Rumky — UX/UI Designer",
   seoDescription: "Taslima Akter Rumky’s UX/UI design portfolio, experience, skills, and education.",
-  experiences: [
-    {
-      id: "experience-1",
-      period: "Add period",
-      company: "Add company",
-      role: "UX/UI Designer",
-      summary: "Replace this entry with verified résumé details in the admin panel.",
-      skills: ["Product design", "Prototyping", "Design systems"]
-    }
-  ],
+  experiences: [],
   skills: [
-    { id: "skill-1", title: "UX strategy", description: "User flows, information architecture, journey mapping, and problem framing." },
-    { id: "skill-2", title: "Research", description: "Discovery, interviews, competitive review, usability testing, and synthesis." },
-    { id: "skill-3", title: "Interface design", description: "Wireframes, responsive UI, prototyping, interaction states, and handoff." },
-    { id: "skill-4", title: "Tools", description: "Figma, FigJam, Adobe Creative Suite, Dribbble, Behance, and collaboration tools." }
+    { id: "skill-1", title: "Product & UX design", description: "Case-study work spanning public services, enterprise systems, healthcare, recruitment, and consumer products." },
+    { id: "skill-2", title: "Interface design", description: "Responsive web products, mobile applications, ERP workflows, and organization landing pages." },
+    { id: "skill-3", title: "Design systems", description: "A personalized React and Flowbite-based design system for consistent product interfaces." },
+    { id: "skill-4", title: "Figma prototyping", description: "Interactive product concepts and connected demonstration journeys created and presented in Figma." }
   ],
-  education: [
-    { id: "education-1", year: "Add year", qualification: "Add qualification", institution: "Add institution", detail: "Add subject or specialization" }
+  education: [],
+  projects: [
+    { id: "citizen-portal", title: "Citizen Services Portal", category: "Public services", summary: "A citizen-facing digital services portal case study.", url: "", featured: true },
+    { id: "crm-erp", title: "CRM & ERP System", category: "Enterprise product", summary: "An enterprise customer relationship and operations platform case study.", url: "", featured: true },
+    { id: "hrms", title: "HRMS (ERP)", category: "Enterprise product", summary: "A human resource management and ERP workflow case study.", url: "", featured: true },
+    { id: "doctor-appointment", title: "Doctor Appointment System", category: "Mobile · Healthcare", summary: "A mobile application case study for finding doctors and managing appointments.", url: "", featured: true },
+    { id: "recruitment-ats", title: "AI-Enabled Recruitment & ATS", category: "Enterprise · AI", summary: "A connected candidate, recruiter, ATS, interview, offer, and responsible-AI product concept.", url: "https://www.figma.com/make/DIEgjYuLq8wwADpu48GlPk/AI-Enabled-Recruitment---ATS", featured: true },
+    { id: "telecom-lifestyle", title: "Telecom Lifestyle App", category: "Mobile · Consumer", summary: "A telecom lifestyle mobile application case study.", url: "", featured: true },
+    { id: "password-manager", title: "Password Manager", category: "Personal · Security", summary: "A personal case study focused on password-management experiences.", url: "", featured: true },
+    { id: "organization-landing", title: "Organization Landing Page", category: "Web design", summary: "A concise organization landing-page experience.", url: "", featured: true },
+    { id: "flowbite-design-system", title: "React & Flowbite Design System", category: "Design system", summary: "A personalized component and interface system based on React and Flowbite.", url: "", featured: true }
   ]
 };
 
@@ -104,6 +113,7 @@ export function normalizeContent(value: Partial<PortfolioContent>): PortfolioCon
     about: Array.isArray(value.about) ? value.about.filter(Boolean) : defaultContent.about,
     experiences: Array.isArray(value.experiences) ? value.experiences : defaultContent.experiences,
     skills: Array.isArray(value.skills) ? value.skills : defaultContent.skills,
-    education: Array.isArray(value.education) ? value.education : defaultContent.education
+    education: Array.isArray(value.education) ? value.education : defaultContent.education,
+    projects: Array.isArray(value.projects) ? value.projects : defaultContent.projects
   };
 }
