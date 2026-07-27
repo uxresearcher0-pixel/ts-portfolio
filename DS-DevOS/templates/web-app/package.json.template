@@ -1,0 +1,12 @@
+{
+  "name": "__PROJECT_NAME__",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@10",
+  "scripts": {
+    "lint": "echo \"Configure lint for this project\"",
+    "typecheck": "echo \"Configure typecheck for this project\"",
+    "test": "echo \"Configure tests for this project\"",
+    "build": "echo \"Configure build for this project\""
+  }
+}

@@ -1,0 +1,24 @@
+# __PROJECT_NAME__
+
+Created using the DS DevOS web application template.
+
+## Development
+
+Open the repository in VS Code and select:
+
+**Dev Containers: Reopen in Container**
+
+Then install or start the framework selected for this project.
+
+## Required checks
+
+```bash
+pnpm lint
+pnpm typecheck
+pnpm test
+pnpm build
+```
+
+## Security
+
+Copy `.env.example` to an ignored local environment file and enter secrets locally. Never commit credentials.
