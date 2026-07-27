@@ -35,6 +35,12 @@ export type PortfolioContent = {
   linkedinUrl: string;
   dribbbleUrl: string;
   behanceUrl: string;
+  profileImage: string;
+  profileImageAlt: string;
+  showAvailability: boolean;
+  accentColor: string;
+  seoTitle: string;
+  seoDescription: string;
   experiences: Experience[];
   skills: SkillGroup[];
   education: Education[];
@@ -64,6 +70,12 @@ export const defaultContent: PortfolioContent = {
   linkedinUrl: "https://www.linkedin.com/in/taslima-rumky/",
   dribbbleUrl: "",
   behanceUrl: "",
+  profileImage: "",
+  profileImageAlt: "Portrait of Taslima Akter Rumky",
+  showAvailability: true,
+  accentColor: "#6d4aff",
+  seoTitle: "Taslima Akter Rumky — UX/UI Designer",
+  seoDescription: "Taslima Akter Rumky’s UX/UI design portfolio, experience, skills, and education.",
   experiences: [
     {
       id: "experience-1",
